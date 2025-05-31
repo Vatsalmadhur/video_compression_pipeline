@@ -9,20 +9,7 @@ const videoRoutes = require('./routes/videoRoutes');
 app.use(cors());
 app.use(express.json());
 
-const dbconnection = async () => {
-    try{
-        await connectDB().then(() => {
-            console.log('Database connected');
-
-        })
-    }
-    catch (error) {
-        console.error('Database connection error:', error);
-
-    }
-};
-dbconnection();
-
+connectDB();
 app.get('/', (req, res) => {
   res.send('Hello World!');
 }
