@@ -2,6 +2,7 @@ const { v4: uuuid4 } = require("uuid");
 const path = require("path");
 const Video = require("../model/schema.js");
 const { videoQueue } = require("../jobs/videoProcessing");
+const { fs } = require("fs");
 const uploadVideo = async (req, res) => {
     try {
         const file = req.file;
@@ -17,6 +18,11 @@ const uploadVideo = async (req, res) => {
         });
 
         await newVideo.save();
+            await videoQueue.add("process", {
+        hash: file.hash,
+        originalPath: file.path,
+    });
+
         const watchURL = `http://localhost:3000/videos/watch?v=${file.hash}`;
         res.status(200).json({
             message: "File uploaded successfully",
@@ -27,10 +33,6 @@ const uploadVideo = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Upload Failed" });
     }
-    await videoQueue.add("process", {
-        hash: file.hash,
-        originalPath: file.path,
-    });
 };
 
 const streamVideo = async (req, res) => {
@@ -52,7 +54,7 @@ const streamVideo = async (req, res) => {
             filepath = video.originalPath;
         }
 
-        if (!fs.existsSync(filepath)) {
+        if (!f.existsSync(filepath)) {
             return res.status(404).json({ message: "Video file not found" });
         }
 
