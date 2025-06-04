@@ -2,8 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import UploadForm from "../UploadForm";
-import Spacer from "../components/Spacer";
+import UploadForm from "../components/UploadForm";
 import Card from "../components/Card";
 export default function Home() {
   const [videos, setVideos] = useState([]);
