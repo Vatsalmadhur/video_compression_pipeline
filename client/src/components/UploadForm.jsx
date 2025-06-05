@@ -1,6 +1,6 @@
 import React from "react";
-import { useState,useRef } from "react";
-import axios from "axios";
+import { useState, useRef } from "react";
+import axiosUploadClient from "../utils/axiosUploadClient";
 export default function UploadForm({ onUploadSuccess }) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
@@ -19,10 +19,10 @@ export default function UploadForm({ onUploadSuccess }) {
 
     try {
       setUploading(true);
-      const res = await axios.post("http://localhost:4000/videos/upload", formData);
+      const res = await axiosUploadClient.post("/videos/upload", formData);
       onUploadSuccess(res.data);
     } catch (err) {
-      alert("Upload failed");
+      alert(err?.response?.data?.message || "Upload failed");
       console.error(err);
     } finally {
       setUploading(false);
@@ -54,10 +54,16 @@ export default function UploadForm({ onUploadSuccess }) {
         <p className="text-gray-600">Uploading...</p>
       ) : (
         <div>
-          <p className="font-semibold text-gray-700">Drag and drop a video file here to upload</p>
+          <p className="font-semibold text-gray-700">
+            Drag and drop a video file here to upload
+          </p>
           <p className="text-sm text-gray-700">Or, browse from your device.</p>
-          <button className="mt-2 bg-[var(--pink-light)] py-1 px-3 text-sm rounded-md ">Browse Files</button>
-          <p className="text-sm text-gray-500 mt-1">Supported: .mp4, .mov, etc.</p>
+          <button className="mt-2 bg-[var(--pink-light)] py-1 px-3 text-sm rounded-md ">
+            Browse Files
+          </button>
+          <p className="text-sm text-gray-500 mt-1">
+            Supported: .mp4, .mov, etc.
+          </p>
         </div>
       )}
     </div>

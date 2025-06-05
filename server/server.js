@@ -6,9 +6,10 @@ const dotenv = require('dotenv');
 dotenv.config();
 const connectDB = require('./db/connectDB');
 const videoRoutes = require('./routes/videoRoutes');
-app.use(cors());
+app.use(cors({origin:process.env.FRONTEND_URL}));
+console.log(process.env.FRONTEND_URL)
 app.use(express.json());
-
+const port = process.env.PORT;
 connectDB();
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -17,7 +18,7 @@ app.get('/', (req, res) => {
 
 app.use('/videos', videoRoutes);
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 }
 );

@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosClient from "../utils/axiosClient";
 
 export default function Watch() {
   const { hash } = useParams();
@@ -11,7 +11,7 @@ export default function Watch() {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/videos/list");
+        const res = await axiosClient.get('/videos/list');
         const matched = res.data.find((v) => v.hash === hash);
         setVideo(matched);
       } catch (err) {
@@ -26,10 +26,9 @@ export default function Watch() {
     return <div className="p-4">Loading video...</div>;
   }
 
-  const videoURL = `http://localhost:4000/videos/watch?v=${hash}${
+  const videoURL = `${process.env.REACT_APP_BASE_URL}/videos/watch?v=${hash}${
     quality === "original" ? "" : `&res=${quality}`
   }`;
-
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
       <Link

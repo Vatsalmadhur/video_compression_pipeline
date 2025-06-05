@@ -1,21 +1,19 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import UploadForm from "../components/UploadForm";
 import Card from "../components/Card";
+import axiosClient from "../utils/axiosClient";
 export default function Home() {
   const [videos, setVideos] = useState([]);
-
-  const fetchVideos = async () => {
-    try {
-      const res = await axios.get("http://localhost:4000/videos/list");
-      setVideos(res.data);
-    } catch (err) {
-      console.error("Failed to fetch videos", err);
-    }
-  };
-
+const fetchVideos = async () => {
+  try {
+    const res = await axiosClient.get('/videos/list');
+    setVideos(res.data);
+  } catch (err) {
+    console.error('Failed to fetch videos:', err.message || err);
+  }
+};
   useEffect(() => {
     fetchVideos();
   }, []);
@@ -34,10 +32,7 @@ export default function Home() {
           <p>No videos uploaded yet.</p>
         ) : (
           videos.map((video) => (
-            <Link
-              to={`/watch/${video.hash}`}
-              key={video.hash}
-            >
+            <Link to={`/watch/${video.hash}`} key={video.hash}>
               <Card originalName={video.originalName} status={video.status} />
             </Link>
           ))
