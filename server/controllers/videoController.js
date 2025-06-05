@@ -2,7 +2,7 @@ const { v4: uuuid4 } = require("uuid");
 const path = require("path");
 const Video = require("../model/schema.js");
 const { videoQueue } = require("../jobs/videoProcessing");
-const { fs } = require("fs");
+const fs = require("fs");
 const uploadVideo = async (req, res) => {
     try {
         const file = req.file;
@@ -18,12 +18,13 @@ const uploadVideo = async (req, res) => {
         });
 
         await newVideo.save();
-            await videoQueue.add("process", {
-        hash: file.hash,
-        originalPath: file.path,
-    });
+        await videoQueue.add("process", {
+            hash: file.hash,
+            originalPath: file.path,
+        });
 
-        const watchURL = `http://localhost:3000/videos/watch?v=${file.hash}`;
+        const watchURL = `${process.env.FRONTEND_URL}/videos/watch?v=${file.hash}`;
+        console.log(watchURL);
         res.status(200).json({
             message: "File uploaded successfully",
             watchURL,
@@ -49,15 +50,14 @@ const streamVideo = async (req, res) => {
 
         let filepath;
         if (resolution && video.status === "ready") {
-            filepath = path.join("processed", `${hash}_${resolution}.mp4`);
+            filepath = path.join("processed", `${hash}-${resolution}.mp4`);
         } else {
             filepath = video.originalPath;
         }
 
-        if (!f.existsSync(filepath)) {
+        if (!fs.existsSync(filepath)) {
             return res.status(404).json({ message: "Video file not found" });
         }
-
         const stat = fs.statSync(filepath);
         const fileSize = stat.size;
         const range = req.headers.range;
@@ -89,5 +89,8 @@ const streamVideo = async (req, res) => {
         res.status(500).json({ message: "Error streaming video" });
     }
 };
-
-module.exports = { uploadVideo, streamVideo };
+const listVideo = async (req, res) => {
+    const videos = await Video.find().sort({ createdAt: -1 }).lean();
+    res.json(videos);
+};
+module.exports = { uploadVideo, streamVideo, listVideo };

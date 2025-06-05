@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const {uploadVideo, streamVideo} = require('../controllers/videoController');
+const {uploadVideo, streamVideo, listVideo} = require('../controllers/videoController');
 const {v4:uuidv4} = require('uuid');
 
 const storage =
@@ -20,4 +20,5 @@ const upload = multer({storage});
 
 router.post('/upload',upload.single('video'),uploadVideo);
 router.get('/watch',streamVideo);
+router.get('/list',listVideo)
 module.exports = router;
