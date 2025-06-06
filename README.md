@@ -1,7 +1,10 @@
 # Video Compression Pipeline
 
-A full-stack video compression and streaming platform that automatically processes uploaded videos into multiple resolutions (144p, 240p, 360p) using FFmpeg, with progress tracking and adaptive streaming capabilities.
+A full-stack video compression and streaming platform that automatically processes uploaded videos into multiple resolutions (144p, 240p, 360p) , with progress tracking and adaptive streaming capabilities.
 
+## 🚀 Deployment
+- Frontend deployed at : [http://4.213.225.5:5001/](http://4.213.225.5:5001/)
+- Server deployed at : [http://4.213.225.5:5002/](http://4.213.225.5:5002/)
 ## 🚀 Features
 
 - **Drag & Drop Upload**: Intuitive file upload interface with support for various video formats
